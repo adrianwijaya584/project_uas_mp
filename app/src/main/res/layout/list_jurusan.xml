@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <TextView
+    android:id="@+id/tvListKJurusan"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="24dp"
+    android:layout_marginTop="16dp"
+    android:text="TextView"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/tvListNJurusan"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="TextView"
+    app:layout_constraintStart_toStartOf="@+id/tvListKJurusan"
+    app:layout_constraintTop_toBottomOf="@+id/tvListKJurusan" />
+
+  <Button
+    android:id="@+id/btnDelJurusan"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    android:backgroundTint="#DC1E10"
+    android:text="Hapus"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="@+id/btnUpdateJurusan" />
+
+  <Button
+    android:id="@+id/btnUpdateJurusan"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    android:text="Edit"
+    app:layout_constraintEnd_toStartOf="@+id/btnDelJurusan"
+    app:layout_constraintTop_toTopOf="@+id/tvListKJurusan" />
+</androidx.constraintlayout.widget.ConstraintLayout>
