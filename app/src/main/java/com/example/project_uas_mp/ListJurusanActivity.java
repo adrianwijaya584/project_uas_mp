@@ -6,8 +6,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,9 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.project_uas_mp.class_data.Jurusan;
+import com.example.project_uas_mp.class_data.JurusanApiResponse;
+import com.example.project_uas_mp.config.AppConfig;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListJurusanActivity extends AppCompatActivity {
   Button btnAddJurusan;
@@ -35,7 +44,7 @@ public class ListJurusanActivity extends AppCompatActivity {
     btnAddJurusan= findViewById(R.id.btnAddJurusan);
     lvJurusan= findViewById(R.id.lvJurusan);
 
-    showData();
+    getData();
 
     btnAddJurusan.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -56,28 +65,66 @@ public class ListJurusanActivity extends AppCompatActivity {
     });
   }
 
-  private void showData() {
+  @Override
+  protected void onStart() {
+    getData();
+    super.onStart();
+  }
+
+  private void getData() {
+    Call<JurusanApiResponse> request= AppConfig.requestConfig(getApplicationContext()).getAllJurusan();
+
+    request.enqueue(new Callback<JurusanApiResponse>() {
+      @Override
+      public void onResponse(Call<JurusanApiResponse> call, Response<JurusanApiResponse> response) {
+        JurusanApiResponse res= response.body();
+
+        if (!response.isSuccessful()) {
+          return;
+        }
+
+        dataJurusan= res.getListJurusan();
+
+        setAdapter();
+      }
+
+      @Override
+      public void onFailure(Call<JurusanApiResponse> call, Throwable t) {
+        Log.d("jurusan", t.getLocalizedMessage());
+      }
+    });
+  } // getData from API
+
+  private void setAdapter() {
     ArrayAdapter<Jurusan> adapter= new ListJurusanAdapter();
 
-    dataJurusan.clear();
-
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SI", "Sistem Informasi"));
-    dataJurusan.add(new Jurusan("SK", "Sistem Komputer"));
-    dataJurusan.add(new Jurusan("TI", "Teknik Informasi"));
-
     lvJurusan.setAdapter(adapter);
+  } // set adapter for list view
+
+  private void deleteData(String id) {
+    Call<JurusanApiResponse> deleteRequest= AppConfig.requestConfig(getApplicationContext()).deleteJurusan(id);
+
+    deleteRequest.enqueue(new Callback<JurusanApiResponse>() {
+      @Override
+      public void onResponse(Call<JurusanApiResponse> call, Response<JurusanApiResponse> response) {
+        if (!response.isSuccessful()) {
+          JurusanApiResponse errBody= new Gson().fromJson(response.errorBody().charStream(), JurusanApiResponse.class);
+
+          Toast.makeText(ListJurusanActivity.this, errBody.getMessage(), Toast.LENGTH_SHORT).show();
+
+          return;
+        }
+
+        Toast.makeText(ListJurusanActivity.this, "Jurusan berhasil dihapus", Toast.LENGTH_SHORT).show();
+
+        getData();
+      }
+
+      @Override
+      public void onFailure(Call<JurusanApiResponse> call, Throwable t) {
+        Toast.makeText(ListJurusanActivity.this, "jurusan gagal dihapus", Toast.LENGTH_SHORT).show();
+      }
+    });
   }
 
   private class ListJurusanAdapter extends ArrayAdapter<Jurusan> {
@@ -109,6 +156,7 @@ public class ListJurusanActivity extends AppCompatActivity {
           Intent intent= new Intent(getApplicationContext(), UpdateJurusanActivity.class);
 
           intent.putExtra("code", jurusan.getCode());
+          intent.putExtra("name", jurusan.getName());
 
           startActivity(intent);
         }
@@ -121,7 +169,13 @@ public class ListJurusanActivity extends AppCompatActivity {
               .setTitle("Konfirmasi")
               .setMessage("Apakah anda ingin menghapus jurusan "+jurusan.getName()+" ?");
 
-          builder.setPositiveButton("Hapus", null);
+          builder.setPositiveButton("Hapus", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+              deleteData(jurusan.getCode());
+            }
+          });
+
           builder.setNegativeButton("Kembali", null);
 
           builder.create().show();

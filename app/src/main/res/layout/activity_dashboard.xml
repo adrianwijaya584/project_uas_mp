@@ -49,9 +49,19 @@
     android:gravity="center_horizontal|center_vertical"
     android:text="Dosen"
     android:textAlignment="center"
-    app:layout_constraintEnd_toEndOf="@+id/textView7"
     app:layout_constraintStart_toStartOf="@+id/tvNavJurusan"
     app:layout_constraintTop_toBottomOf="@+id/tvNavJurusan" />
+
+  <TextView
+    android:id="@+id/textView9"
+    android:layout_width="150dp"
+    android:layout_height="100dp"
+    android:background="@color/gray_500"
+    android:gravity="center_horizontal|center_vertical"
+    android:text="Mata Kuliah"
+    android:textAlignment="center"
+    app:layout_constraintStart_toStartOf="@+id/textView7"
+    app:layout_constraintTop_toTopOf="@+id/textView8" />
 
   <TextView
     android:id="@+id/textView7"

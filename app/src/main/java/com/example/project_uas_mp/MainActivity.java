@@ -11,6 +11,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.project_uas_mp.class_data.AuthApiResponse;
+import com.example.project_uas_mp.class_data.AuthBody;
+import com.example.project_uas_mp.config.AppConfig;
+import com.google.gson.Gson;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
   EditText etUsername, etPassword;
   Button btnLogin;
@@ -39,15 +49,60 @@ public class MainActivity extends AppCompatActivity {
     btnLogin.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+        loginAction();
+      }
+    });
+  }
+
+  private void loginAction() {
+    String username= etUsername.getText().toString();
+    String password= etPassword.getText().toString();
+
+    if (username.equals("")) {
+      Toast.makeText(this, "Harap masukan username", Toast.LENGTH_SHORT).show();
+      etUsername.requestFocus();
+      return;
+    }
+    if (password.equals("")) {
+      Toast.makeText(this, "Harap masukan password", Toast.LENGTH_SHORT).show();
+      etPassword.requestFocus();
+      return;
+    }
+
+    Call<AuthApiResponse> request= AppConfig.requestConfig(getApplicationContext()).login(new AuthBody(username, password));
+
+    request.enqueue(new Callback<AuthApiResponse>() {
+      @Override
+      public void onResponse(Call<AuthApiResponse> call, Response<AuthApiResponse> response) {
+        AuthApiResponse res= response.body();
+
+        if (!response.isSuccessful()) {
+          Gson gson= new Gson();
+
+          AuthApiResponse errBody= gson.fromJson(response.errorBody().charStream(), AuthApiResponse.class);
+
+          Toast.makeText(MainActivity.this, errBody.getMessage(), Toast.LENGTH_SHORT)
+              .show();
+
+          return;
+        }
+
         SharedPreferences.Editor editor= sp.edit();
 
-        editor.putString("token", "123");
+        editor.putString("token", res.getData().getAccess_token());
 
         editor.apply();
+
+        Toast.makeText(MainActivity.this, "Selamat datang "+username, Toast.LENGTH_SHORT).show();
 
         Intent intent= new Intent(getApplicationContext(), DashboardActivity.class);
 
         startActivity(intent);
+      }
+
+      @Override
+      public void onFailure(Call<AuthApiResponse> call, Throwable t) {
+        Toast.makeText(MainActivity.this, "Login gagal dilakukan", Toast.LENGTH_SHORT).show();
       }
     });
   }
