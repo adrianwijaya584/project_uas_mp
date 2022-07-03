@@ -32,12 +32,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class DashboardActivity extends AppCompatActivity {
-  TextView tvWelcome, tvLogout, tvNavJurusan;
+  TextView tvWelcome, tvLogout, tvNavJurusan, tvNavMahasiswa;
   SharedPreferences.Editor editor;
   SharedPreferences sharedPreferences;
 
-  @SuppressLint("SetTextI18n")
-  @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -61,11 +59,19 @@ public class DashboardActivity extends AppCompatActivity {
     tvWelcome.setText("Selamat datang, ".concat(name));
     tvLogout= findViewById(R.id.tvLogout);
     tvNavJurusan= findViewById(R.id.tvNavJurusan);
+    tvNavMahasiswa= findViewById(R.id.tvNavMahasiswa);
 
     tvNavJurusan.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         startActivity(new Intent(getApplicationContext(), ListJurusanActivity.class));
+      }
+    });
+
+    tvNavMahasiswa.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        startActivity(new Intent(getApplicationContext(), ListMahasiswaActivity.class));
       }
     });
 

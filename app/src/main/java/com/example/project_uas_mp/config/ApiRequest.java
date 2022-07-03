@@ -5,6 +5,9 @@ import com.example.project_uas_mp.class_data.AuthBody;
 import com.example.project_uas_mp.class_data.Jurusan;
 import com.example.project_uas_mp.class_data.JurusanApiResponse;
 import com.example.project_uas_mp.class_data.JurusanBody;
+import com.example.project_uas_mp.class_data.Mahasiswa;
+import com.example.project_uas_mp.class_data.MahasiswaApiResponse;
+import com.example.project_uas_mp.class_data.MahasiswaBody;
 
 import java.util.List;
 
@@ -31,4 +34,13 @@ public interface ApiRequest {
 
   @DELETE("/majors/{id}")
   Call<JurusanApiResponse> deleteJurusan(@Path("id") String id);
+
+  @GET("/students")
+  Call<MahasiswaApiResponse> getAllMahasiswa();
+
+  @POST("/students")
+  Call<MahasiswaApiResponse> addMahasiswa(@Body MahasiswaBody body);
+
+  @DELETE("/students/{id}")
+  Call<MahasiswaApiResponse> deleteMahasiswa(@Path("id") String id);
 }

@@ -4,11 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_add_jurusan.xml" value="0.4" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_add_mahasiswa.xml" value="0.536" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_dashboard.xml" value="0.536" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_list_jurusan.xml" value="0.4" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_list_mahasiswa.xml" value="0.2" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_main.xml" value="0.536" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_update_jurusan.xml" value="0.4" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/list_jurusan.xml" value="0.6" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/list_mahasiswa.xml" value="0.6" />
       </map>
     </option>
   </component>
