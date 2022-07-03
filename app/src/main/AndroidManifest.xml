@@ -18,6 +18,12 @@
     android:usesCleartextTraffic="true"
     tools:targetApi="31">
     <activity
+      android:name=".AddMahasiswaActivity"
+      android:exported="false" />
+    <activity
+      android:name=".ListMahasiswaActivity"
+      android:exported="false" />
+    <activity
       android:name=".UpdateJurusanActivity"
       android:exported="false" />
     <activity

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class JurusanApiResponse {
+public class MahasiswaApiResponse {
   @SerializedName("success")
   private Boolean success;
 
@@ -12,12 +12,12 @@ public class JurusanApiResponse {
   private String message;
 
   @SerializedName("data")
-  private List<Jurusan> listJurusan;
+  private List<Mahasiswa> listMahasiswa;
 
-  public JurusanApiResponse(Boolean success, String message, List<Jurusan> listJurusan) {
+  public MahasiswaApiResponse(Boolean success, String message, List<Mahasiswa> listMahasiswa) {
     this.success = success;
     this.message= message;
-    this.listJurusan = listJurusan;
+    this.listMahasiswa = listMahasiswa;
   }
 
   public Boolean getSuccess() {
@@ -36,11 +36,11 @@ public class JurusanApiResponse {
     this.message = message;
   }
 
-  public List<Jurusan> getListJurusan() {
-    return listJurusan;
+  public List<Mahasiswa> getListMahasiswa() {
+    return listMahasiswa;
   }
 
-  public void setListJurusan(List<Jurusan> listJurusan) {
-    this.listJurusan = listJurusan;
+  public void setListMahasiswa(List<Mahasiswa> listMahasiswa) {
+    this.listMahasiswa = listMahasiswa;
   }
 }
