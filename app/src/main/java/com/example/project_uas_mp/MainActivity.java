@@ -16,8 +16,6 @@ import com.example.project_uas_mp.class_data.AuthBody;
 import com.example.project_uas_mp.config.AppConfig;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
