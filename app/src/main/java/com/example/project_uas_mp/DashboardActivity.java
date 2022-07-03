@@ -4,17 +4,23 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.project_uas_mp.class_data.Jurusan;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +34,9 @@ import java.util.Locale;
 public class DashboardActivity extends AppCompatActivity {
   TextView tvWelcome, tvLogout, tvNavJurusan;
   SharedPreferences.Editor editor;
+  SharedPreferences sharedPreferences;
 
+  @SuppressLint("SetTextI18n")
   @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +44,21 @@ public class DashboardActivity extends AppCompatActivity {
     setContentView(R.layout.activity_dashboard);
 
 
-    editor= PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    editor = sharedPreferences.edit();
 
+    String token = sharedPreferences.getString("token", "");
+    String tokenPayloadEncoded = TextUtils.split(token, "[.]")[1];
+    byte[] tokenPayloadDecodedByte = Base64.decode(tokenPayloadEncoded, Base64.DEFAULT);
+    String name = "";
+    try {
+      JSONObject tokenJson = new JSONObject(new String(tokenPayloadDecodedByte));
+      name = tokenJson.getString("name");
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
     tvWelcome= findViewById(R.id.tvWelcome);
+    tvWelcome.setText("Selamat datang, ".concat(name));
     tvLogout= findViewById(R.id.tvLogout);
     tvNavJurusan= findViewById(R.id.tvNavJurusan);
 
