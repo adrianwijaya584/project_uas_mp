@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,7 +41,7 @@ public class ListJurusanActivity extends AppCompatActivity {
     setContentView(R.layout.activity_list_jurusan);
 
     btnAddJurusan= findViewById(R.id.btnAddJurusan);
-    lvJurusan= findViewById(R.id.lvJurusan);
+    lvJurusan= findViewById(R.id.lvMatkul);
 
     getData();
 
@@ -67,8 +66,9 @@ public class ListJurusanActivity extends AppCompatActivity {
 
   @Override
   protected void onStart() {
-    getData();
     super.onStart();
+
+    getData();
   }
 
   private void getData() {
@@ -141,10 +141,10 @@ public class ListJurusanActivity extends AppCompatActivity {
 
       Jurusan jurusan= dataJurusan.get(position);
 
-      TextView tvListKJurusan= convertView.findViewById(R.id.tvListKJurusan);
-      TextView tvListNJurusan= convertView.findViewById(R.id.tvListNJurusan);
-      Button btnDelJurusan= convertView.findViewById(R.id.btnDelJurusan);
-      Button btnUpdateJurusan= convertView.findViewById(R.id.btnUpdateJurusan);
+      TextView tvListKJurusan= convertView.findViewById(R.id.tvListIdMatkul);
+      TextView tvListNJurusan= convertView.findViewById(R.id.tvListNamaMatkul);
+      Button btnDelJurusan= convertView.findViewById(R.id.btnDelMatkul);
+      Button btnUpdateJurusan= convertView.findViewById(R.id.btnUpdateMatkul);
 
 
       tvListKJurusan.setText(jurusan.getCode());

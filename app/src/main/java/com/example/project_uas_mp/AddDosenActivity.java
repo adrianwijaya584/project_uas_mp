@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -18,9 +16,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.project_uas_mp.class_data.DosenApiResponse;
+import com.example.project_uas_mp.class_data.DosenBody;
 import com.example.project_uas_mp.class_data.FilesApiResponse;
-import com.example.project_uas_mp.class_data.MahasiswaApiResponse;
-import com.example.project_uas_mp.class_data.MahasiswaBody;
 import com.example.project_uas_mp.config.AppConfig;
 import com.example.project_uas_mp.config.Utils;
 import com.google.gson.Gson;
@@ -34,47 +32,47 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddMahasiswaActivity extends AppCompatActivity {
-  EditText etAddNimMhs, etAddNamaMhs, etAddTelpMhs, etAddAlamatMhs;
-  RadioGroup rgAddGenderMhs;
-  String filename;
-  ImageView imvAddMhs;
-  Button btnSendAddMhs, btnFileAddMhs;
+public class AddDosenActivity extends AppCompatActivity {
+  EditText etAddIdDosen, etAddNamaDosen, etAddTelpDosen, etAddAlamatDosen;
+  RadioGroup rgGenderDosen;
+  String filename= null;
+  ImageView imvAddDosen;
+  Button btnSendAddDosen, btnFileAddDosen;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_add_mahasiswa);
+    setContentView(R.layout.activity_add_dosen);
 
-    etAddNimMhs= findViewById(R.id.etAddNimMhs);
-    etAddNamaMhs= findViewById(R.id.etAddNamaMhs);
-    etAddTelpMhs= findViewById(R.id.etAddTelpMhs);
-    etAddAlamatMhs= findViewById(R.id.etAddAlamatMhs);
-    rgAddGenderMhs= findViewById(R.id.rgGenderDosen);
-    imvAddMhs= findViewById(R.id.imvAddMhs);
-    btnSendAddMhs= findViewById(R.id.btnSendAddMhs);
-    btnFileAddMhs= findViewById(R.id.btnFileAddMhs);
+    etAddIdDosen= findViewById(R.id.etAddIdDosen);
+    etAddNamaDosen= findViewById(R.id.etAddNamaDosen);
+    etAddTelpDosen= findViewById(R.id.etAddTelpDosen);
+    etAddAlamatDosen= findViewById(R.id.etAddAlamatDosen);
+    rgGenderDosen= findViewById(R.id.rgGenderDosen);
+    imvAddDosen= findViewById(R.id.imvAddDosen);
+    btnFileAddDosen= findViewById(R.id.btnFileAddDosen);
+    btnSendAddDosen= findViewById(R.id.btnSendAddDosen);
 
-    etAddNimMhs.setText("200001");
-    etAddNamaMhs.setText("nama");
-    etAddTelpMhs.setText("0101010");
-    etAddAlamatMhs.setText("Jln");
+    etAddIdDosen.setText("1111");
+    etAddNamaDosen.setText("Dosen 1");
+    etAddTelpDosen.setText("088118");
+    etAddAlamatDosen.setText("Jln");
 
-    btnFileAddMhs.setOnClickListener(new View.OnClickListener() {
+    btnFileAddDosen.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        Intent i= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-        i.setType("image/*");
+        intent.setType("image/*");
 
-        startActivityForResult(i, 1);
+        startActivityForResult(intent, 1);
       }
     });
 
-    btnSendAddMhs.setOnClickListener(new View.OnClickListener() {
+    btnSendAddDosen.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        addMahasiswa();
+        addDosen();
       }
     });
   } // onCreate
@@ -86,7 +84,7 @@ public class AddMahasiswaActivity extends AppCompatActivity {
     if (data==null) {
       filename= null;
 
-      imvAddMhs.setImageResource(R.mipmap.ic_launcher);
+      imvAddDosen.setImageResource(R.mipmap.ic_launcher);
     } else {
       if (requestCode==1 && resultCode== Activity.RESULT_OK) {
         File sourceFile= new File(Utils.getRealPathFromURI(getApplicationContext(), data.getData()));
@@ -114,7 +112,7 @@ public class AddMahasiswaActivity extends AppCompatActivity {
 
             filename = response.body().getData().getName();
 
-            imvAddMhs.setImageURI(data.getData());
+            imvAddDosen.setImageURI(data.getData());
           }
 
           @Override
@@ -125,18 +123,17 @@ public class AddMahasiswaActivity extends AppCompatActivity {
           }
         });
 
-      }
-    }
-  }
+      } // enqueue
+    } // else
+  } // onActivityRes
 
-
-  private void addMahasiswa() {
-    String id= etAddNimMhs.getText().toString();
-    String name= etAddNamaMhs.getText().toString();
-    String phone= String.valueOf(etAddTelpMhs.getText().toString());
-    String address= etAddAlamatMhs.getText().toString();
-    RadioButton rb= findViewById(rgAddGenderMhs.getCheckedRadioButtonId());
-    String gender= rb.getText().toString().equals("Laki-laki")?"male":"female";
+  private void addDosen() {
+    RadioButton activeGender= findViewById(rgGenderDosen.getCheckedRadioButtonId());
+    String id= etAddIdDosen.getText().toString();
+    String name= etAddNamaDosen.getText().toString();
+    String phone= etAddTelpDosen.getText().toString();
+    String address= etAddAlamatDosen.getText().toString();
+    String gender= activeGender.getText().toString().equals("Laki-laki")?"male":"female";
 
     if (filename == null) {
       Toast.makeText(this, "Harap memilih gambar", Toast.LENGTH_SHORT).show();
@@ -145,56 +142,55 @@ public class AddMahasiswaActivity extends AppCompatActivity {
 
     if (id.equals("")) {
       Toast.makeText(this, "Harap mengisi NIM", Toast.LENGTH_SHORT).show();
-      etAddNimMhs.requestFocus();
+      etAddIdDosen.requestFocus();
       return;
     }
 
     if (name.equals("")) {
       Toast.makeText(this, "Harap mengisi Nama", Toast.LENGTH_SHORT).show();
-      etAddNamaMhs.requestFocus();
+      etAddNamaDosen.requestFocus();
       return;
     }
 
     if (phone.equals("")) {
       Toast.makeText(this, "Harap mengisi No Telp", Toast.LENGTH_SHORT).show();
-      etAddTelpMhs.requestFocus();
+      etAddTelpDosen.requestFocus();
       return;
     }
 
     if (address.equals("")) {
       Toast.makeText(this, "Harap mengisi Alamat", Toast.LENGTH_SHORT).show();
-      etAddAlamatMhs.requestFocus();
+      etAddAlamatDosen.requestFocus();
       return;
     }
 
+    DosenBody body= new DosenBody(id, name, phone, address, gender, filename);
 
-    MahasiswaBody body= new MahasiswaBody(id, name, phone, address, gender, filename);
+    Call<DosenApiResponse> call= AppConfig.requestConfig(AddDosenActivity.this).addDosen(body);
 
-    Call<MahasiswaApiResponse> call= AppConfig.requestConfig(AddMahasiswaActivity.this).addMahasiswa(body);
-
-    call.enqueue(new Callback<MahasiswaApiResponse>() {
+    call.enqueue(new Callback<DosenApiResponse>() {
       @Override
-      public void onResponse(Call<MahasiswaApiResponse> call, Response<MahasiswaApiResponse> response) {
+      public void onResponse(Call<DosenApiResponse> call, Response<DosenApiResponse> response) {
         if (!response.isSuccessful()) {
-          MahasiswaApiResponse errBody= new Gson().fromJson(response.errorBody().charStream(), MahasiswaApiResponse.class);
+          DosenApiResponse errBody= new Gson().fromJson(response.errorBody().charStream(), DosenApiResponse.class);
 
-          Toast.makeText(AddMahasiswaActivity.this, errBody.getMessage(), Toast.LENGTH_SHORT).show();
-          
+          Toast.makeText(AddDosenActivity.this, errBody.getMessage(), Toast.LENGTH_SHORT).show();
+
           return;
         }
 
-        Toast.makeText(AddMahasiswaActivity.this, "Berhasil menambahkan mahasiswa", Toast.LENGTH_SHORT).show();
+        Toast.makeText(AddDosenActivity.this, "Data dosen berhasil ditambahkan", Toast.LENGTH_SHORT).show();
 
         finish();
       }
 
       @Override
-      public void onFailure(Call<MahasiswaApiResponse> call, Throwable t) {
-        filename= null;
+      public void onFailure(Call<DosenApiResponse> call, Throwable t) {
         System.out.println(t.getLocalizedMessage());
 
-        Toast.makeText(AddMahasiswaActivity.this, "Gagal menambahkan mahasiswa", Toast.LENGTH_SHORT).show();
+        Toast.makeText(AddDosenActivity.this, "Data dosen gagal ditambahkan", Toast.LENGTH_SHORT).show();
       }
     });
-  }
-}
+  } // addDosen
+
+} // class

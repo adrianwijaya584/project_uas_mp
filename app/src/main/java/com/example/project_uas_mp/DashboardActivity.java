@@ -3,24 +3,21 @@ package com.example.project_uas_mp;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.project_uas_mp.class_data.Jurusan;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,34 +29,28 @@ import java.util.List;
 import java.util.Locale;
 
 public class DashboardActivity extends AppCompatActivity {
-  TextView tvWelcome, tvLogout, tvNavJurusan, tvNavMahasiswa;
-  SharedPreferences.Editor editor;
-  SharedPreferences sharedPreferences;
+  TextView tvWelcome, tvLogout, tvNavJurusan, tvNavMahasiswa, tvNavDosen, tvNavMatkul;
+  SharedPreferences sp;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
 
-
-    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-    editor = sharedPreferences.edit();
-
-    String token = sharedPreferences.getString("token", "");
-    String tokenPayloadEncoded = TextUtils.split(token, "[.]")[1];
-    byte[] tokenPayloadDecodedByte = Base64.decode(tokenPayloadEncoded, Base64.DEFAULT);
-    String name = "";
-    try {
-      JSONObject tokenJson = new JSONObject(new String(tokenPayloadDecodedByte));
-      name = tokenJson.getString("name");
-    } catch (JSONException e) {
-      e.printStackTrace();
+    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
     }
+
+    sp= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
     tvWelcome= findViewById(R.id.tvWelcome);
-    tvWelcome.setText("Selamat datang, ".concat(name));
     tvLogout= findViewById(R.id.tvLogout);
     tvNavJurusan= findViewById(R.id.tvNavJurusan);
     tvNavMahasiswa= findViewById(R.id.tvNavMahasiswa);
+    tvNavDosen= findViewById(R.id.tvNavDosen);
+    tvNavMatkul= findViewById(R.id.tvNavMatkul);
+
+    tvWelcome.setText("Selamat datang "+sp.getString("username", "")+"!");
 
     tvNavJurusan.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -75,6 +66,20 @@ public class DashboardActivity extends AppCompatActivity {
       }
     });
 
+    tvNavDosen.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        startActivity(new Intent(getApplicationContext(), ListDosenActivity.class));
+      }
+    });
+
+    tvNavMatkul.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        startActivity(new Intent(getApplicationContext(), ListMatkulActivity.class));
+      }
+    });
+
     tvLogout.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -85,7 +90,10 @@ public class DashboardActivity extends AppCompatActivity {
         builder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogInterface, int i) {
+            SharedPreferences.Editor editor= sp.edit();
+
             editor.remove("token");
+            editor.remove("username");
 
             editor.apply();
 

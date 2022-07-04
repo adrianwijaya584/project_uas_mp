@@ -1,12 +1,12 @@
 package com.example.project_uas_mp;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -34,33 +34,48 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddMahasiswaActivity extends AppCompatActivity {
-  EditText etAddNimMhs, etAddNamaMhs, etAddTelpMhs, etAddAlamatMhs;
-  RadioGroup rgAddGenderMhs;
-  String filename;
-  ImageView imvAddMhs;
-  Button btnSendAddMhs, btnFileAddMhs;
+public class UpdateMahasiswaActivity extends AppCompatActivity {
+  EditText etEditNimMhs, etEditNamaMhs, etEditTelpMhs, etEditAlamatMhs;
+  RadioGroup rgEditGenderMhs;
+  Button btnSendEditMhs, btnFileEditMhs;
+  ImageView imvUpdateMhs;
+  RadioButton mhsLakiLaki, mhsPerempuan;
+  MahasiswaBody mahasiswaBody;
+  String filename= "";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_add_mahasiswa);
+    setContentView(R.layout.activity_update_mahasiswa);
 
-    etAddNimMhs= findViewById(R.id.etAddNimMhs);
-    etAddNamaMhs= findViewById(R.id.etAddNamaMhs);
-    etAddTelpMhs= findViewById(R.id.etAddTelpMhs);
-    etAddAlamatMhs= findViewById(R.id.etAddAlamatMhs);
-    rgAddGenderMhs= findViewById(R.id.rgGenderDosen);
-    imvAddMhs= findViewById(R.id.imvAddMhs);
-    btnSendAddMhs= findViewById(R.id.btnSendAddMhs);
-    btnFileAddMhs= findViewById(R.id.btnFileAddMhs);
+    etEditNimMhs= findViewById(R.id.etEditNimMhs);
+    etEditNamaMhs= findViewById(R.id.etEditNamaMhs);
+    etEditTelpMhs= findViewById(R.id.etEditTelpMhs);
+    etEditAlamatMhs= findViewById(R.id.etEditAlamatMhs);
+    rgEditGenderMhs= findViewById(R.id.rgGenderDosen);
+    btnSendEditMhs= findViewById(R.id.btnSendEditMhs);
+    btnFileEditMhs= findViewById(R.id.btnFileEditMhs);
+    imvUpdateMhs= findViewById(R.id.imvUpdateMhs);
+    mhsLakiLaki= findViewById(R.id.dosenLakiLaki);
+    mhsPerempuan= findViewById(R.id.dosenPerempuan);
 
-    etAddNimMhs.setText("200001");
-    etAddNamaMhs.setText("nama");
-    etAddTelpMhs.setText("0101010");
-    etAddAlamatMhs.setText("Jln");
+    Intent intent= getIntent();
 
-    btnFileAddMhs.setOnClickListener(new View.OnClickListener() {
+    mahasiswaBody= intent.getParcelableExtra("mahasiswa");
+
+    etEditNimMhs.setText(mahasiswaBody.getId());
+    etEditNamaMhs.setText(mahasiswaBody.getName());
+    etEditTelpMhs.setText(mahasiswaBody.getPhone_number());
+    etEditAlamatMhs.setText(mahasiswaBody.getAddress());
+    filename= mahasiswaBody.getProfile_image();
+
+    if (mahasiswaBody.getGender() == "male") {
+      mhsLakiLaki.setChecked(true);
+    } else {
+      mhsPerempuan.setChecked(true);
+    }
+
+    btnFileEditMhs.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         Intent i= new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -71,10 +86,23 @@ public class AddMahasiswaActivity extends AppCompatActivity {
       }
     });
 
-    btnSendAddMhs.setOnClickListener(new View.OnClickListener() {
+    btnSendEditMhs.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        addMahasiswa();
+        AlertDialog.Builder builder= new AlertDialog.Builder(UpdateMahasiswaActivity.this)
+            .setTitle("Konfirmasi")
+            .setMessage("Apakah anda yakin dengan data ini ?");
+
+        builder.setPositiveButton("Kirim", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+            updateMahasiswa();
+          }
+        });
+
+        builder.setNegativeButton("Kembali", null);
+
+        builder.create().show();
       }
     });
   } // onCreate
@@ -84,9 +112,10 @@ public class AddMahasiswaActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
 
     if (data==null) {
-      filename= null;
+      filename= mahasiswaBody.getProfile_image();
 
-      imvAddMhs.setImageResource(R.mipmap.ic_launcher);
+      imvUpdateMhs.setImageResource(R.mipmap.ic_launcher);
+
     } else {
       if (requestCode==1 && resultCode== Activity.RESULT_OK) {
         File sourceFile= new File(Utils.getRealPathFromURI(getApplicationContext(), data.getData()));
@@ -107,6 +136,7 @@ public class AddMahasiswaActivity extends AppCompatActivity {
           @Override
           public void onResponse(Call<FilesApiResponse> call, Response<FilesApiResponse> response) {
             if (!response.isSuccessful()) {
+              filename= mahasiswaBody.getProfile_image();
               Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
 
               return;
@@ -114,63 +144,65 @@ public class AddMahasiswaActivity extends AppCompatActivity {
 
             filename = response.body().getData().getName();
 
-            imvAddMhs.setImageURI(data.getData());
+            imvUpdateMhs.setImageURI(data.getData());
           }
 
           @Override
           public void onFailure(Call<FilesApiResponse> call, Throwable t) {
             Log.d("uploadFile", t.getLocalizedMessage());
 
+            filename= mahasiswaBody.getProfile_image();
+
             Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
           }
-        });
+        }); // onFail
+      } // enqueue
+    } // else
+  } // onActivityRes
 
-      }
-    }
-  }
-
-
-  private void addMahasiswa() {
-    String id= etAddNimMhs.getText().toString();
-    String name= etAddNamaMhs.getText().toString();
-    String phone= String.valueOf(etAddTelpMhs.getText().toString());
-    String address= etAddAlamatMhs.getText().toString();
-    RadioButton rb= findViewById(rgAddGenderMhs.getCheckedRadioButtonId());
+  private void updateMahasiswa() {
+    String id= etEditNimMhs.getText().toString();
+    String name= etEditNamaMhs.getText().toString();
+    String phone= String.valueOf(etEditTelpMhs.getText().toString());
+    String address= etEditAlamatMhs.getText().toString();
+    RadioButton rb= findViewById(rgEditGenderMhs.getCheckedRadioButtonId());
     String gender= rb.getText().toString().equals("Laki-laki")?"male":"female";
-
-    if (filename == null) {
-      Toast.makeText(this, "Harap memilih gambar", Toast.LENGTH_SHORT).show();
-      return;
-    }
 
     if (id.equals("")) {
       Toast.makeText(this, "Harap mengisi NIM", Toast.LENGTH_SHORT).show();
-      etAddNimMhs.requestFocus();
+      etEditNimMhs.requestFocus();
       return;
     }
 
     if (name.equals("")) {
       Toast.makeText(this, "Harap mengisi Nama", Toast.LENGTH_SHORT).show();
-      etAddNamaMhs.requestFocus();
+      etEditNamaMhs.requestFocus();
       return;
     }
 
     if (phone.equals("")) {
       Toast.makeText(this, "Harap mengisi No Telp", Toast.LENGTH_SHORT).show();
-      etAddTelpMhs.requestFocus();
+      etEditTelpMhs.requestFocus();
       return;
     }
 
     if (address.equals("")) {
       Toast.makeText(this, "Harap mengisi Alamat", Toast.LENGTH_SHORT).show();
-      etAddAlamatMhs.requestFocus();
+      etEditAlamatMhs.requestFocus();
       return;
     }
 
-
-    MahasiswaBody body= new MahasiswaBody(id, name, phone, address, gender, filename);
-
-    Call<MahasiswaApiResponse> call= AppConfig.requestConfig(AddMahasiswaActivity.this).addMahasiswa(body);
+    Call<MahasiswaApiResponse> call= AppConfig.requestConfig(getApplicationContext()).updateMahasiswa(
+        mahasiswaBody.getId(),
+        new MahasiswaBody(
+            id,
+            name,
+            phone,
+            address,
+            gender,
+            filename
+        )
+    );
 
     call.enqueue(new Callback<MahasiswaApiResponse>() {
       @Override
@@ -178,23 +210,22 @@ public class AddMahasiswaActivity extends AppCompatActivity {
         if (!response.isSuccessful()) {
           MahasiswaApiResponse errBody= new Gson().fromJson(response.errorBody().charStream(), MahasiswaApiResponse.class);
 
-          Toast.makeText(AddMahasiswaActivity.this, errBody.getMessage(), Toast.LENGTH_SHORT).show();
-          
+          Toast.makeText(UpdateMahasiswaActivity.this, errBody.getMessage(), Toast.LENGTH_SHORT).show();
+
           return;
         }
 
-        Toast.makeText(AddMahasiswaActivity.this, "Berhasil menambahkan mahasiswa", Toast.LENGTH_SHORT).show();
+        Toast.makeText(UpdateMahasiswaActivity.this, "Data mahasiswa berhasil diubah", Toast.LENGTH_SHORT).show();
 
         finish();
       }
 
       @Override
       public void onFailure(Call<MahasiswaApiResponse> call, Throwable t) {
-        filename= null;
         System.out.println(t.getLocalizedMessage());
 
-        Toast.makeText(AddMahasiswaActivity.this, "Gagal menambahkan mahasiswa", Toast.LENGTH_SHORT).show();
+        Toast.makeText(UpdateMahasiswaActivity.this, "Data mahasiswa gagal diubah", Toast.LENGTH_SHORT).show();
       }
     });
   }
-}
+} // class

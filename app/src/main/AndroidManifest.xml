@@ -18,6 +18,27 @@
     android:usesCleartextTraffic="true"
     tools:targetApi="31">
     <activity
+      android:name=".UpdateMatkulActivity"
+      android:exported="false" />
+    <activity
+      android:name=".AddMatkulActivity"
+      android:exported="false" />
+    <activity
+      android:name=".ListMatkulActivity"
+      android:exported="false" />
+    <activity
+      android:name=".UpdateDosenActivity"
+      android:exported="false" />
+    <activity
+      android:name=".AddDosenActivity"
+      android:exported="false" />
+    <activity
+      android:name=".ListDosenActivity"
+      android:exported="false" />
+    <activity
+      android:name=".UpdateMahasiswaActivity"
+      android:exported="false" />
+    <activity
       android:name=".AddMahasiswaActivity"
       android:exported="false" />
     <activity

@@ -37,6 +37,18 @@ public class AddJurusanActivity extends AppCompatActivity {
         String kodeJurusan= etAddKodeJ.getText().toString();
         String namaJurusan= etAddNamaJ.getText().toString();
 
+        if (kodeJurusan.equals("")) {
+          Toast.makeText(AddJurusanActivity.this, "Harap memasukan kode jurusan", Toast.LENGTH_SHORT).show();
+          etAddKodeJ.requestFocus();
+          return;
+        }
+
+        if (namaJurusan.equals("")) {
+          Toast.makeText(AddJurusanActivity.this, "Harap memasukan nama jurusan", Toast.LENGTH_SHORT).show();
+          etAddNamaJ.requestFocus();
+          return;
+        }
+
         Call<JurusanApiResponse> request= AppConfig.requestConfig(getApplicationContext())
             .addJurusan(new JurusanBody(kodeJurusan, namaJurusan));
 

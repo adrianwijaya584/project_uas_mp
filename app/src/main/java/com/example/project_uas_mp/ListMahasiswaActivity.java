@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +19,10 @@ import android.widget.Toast;
 
 import com.example.project_uas_mp.class_data.Mahasiswa;
 import com.example.project_uas_mp.class_data.MahasiswaApiResponse;
+import com.example.project_uas_mp.class_data.MahasiswaBody;
 import com.example.project_uas_mp.config.AppConfig;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,12 @@ public class ListMahasiswaActivity extends AppCompatActivity {
     getData();
 
   } // onCreate
+
+  @Override
+  protected void onStart() {
+    getData();
+    super.onStart();
+  }
 
   private void setAdapter() {
     ArrayAdapter<Mahasiswa> adapter= new ListMahasiswaAdapter();
@@ -91,8 +98,6 @@ public class ListMahasiswaActivity extends AppCompatActivity {
   private void getData() {
     dataMhs.clear();
 
-//    dataMhs.add(new Mahasiswa("1", "a", "1919", "aaa", "male", "1", "now"));
-
     Call<MahasiswaApiResponse> responseCall= AppConfig.requestConfig(getApplicationContext()).getAllMahasiswa();
 
     responseCall.enqueue(new Callback<MahasiswaApiResponse>() {
@@ -129,19 +134,32 @@ public class ListMahasiswaActivity extends AppCompatActivity {
 
       Mahasiswa mhs= dataMhs.get(position);
 
-      ImageView imvListMhs= convertView.findViewById(R.id.imvListMhs);
-      TextView tvListNimMhs= convertView.findViewById(R.id.tvListNimMhs);
-      TextView tvListNamaMhs= convertView.findViewById(R.id.tvListNamaMhs);
-      Button btnListUpdateMhs= convertView.findViewById(R.id.btnListUpdateMhs);
-      Button btnListDeleteMhs= convertView.findViewById(R.id.btnListDeleteMhs);
+      ImageView imvListMhs= convertView.findViewById(R.id.imvListDosen);
+      TextView tvListNimMhs= convertView.findViewById(R.id.tvListIdDosen);
+      TextView tvListNamaMhs= convertView.findViewById(R.id.tvListNamaDosen);
+      Button btnListUpdateMhs= convertView.findViewById(R.id.btnListUpdateDosen);
+      Button btnListDeleteMhs= convertView.findViewById(R.id.btnListDeleteDosen);
 
       tvListNimMhs.setText(mhs.getId());
       tvListNamaMhs.setText(mhs.getName());
 
+      Picasso.get().load(AppConfig.BASE_URL+"files/"+mhs.getProfile_image())
+          .error(R.mipmap.ic_launcher)
+          .placeholder(R.mipmap.ic_launcher)
+          .centerCrop()
+          .fit()
+          .into(imvListMhs);
+
       btnListUpdateMhs.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          Toast.makeText(ListMahasiswaActivity.this, "Update "+mhs.getName(), Toast.LENGTH_SHORT).show();
+          Intent intent= new Intent(ListMahasiswaActivity.this, UpdateMahasiswaActivity.class);
+
+          intent.putExtra("mahasiswa",
+              new MahasiswaBody(mhs.getId(), mhs.getName(), mhs.getPhone_number(), mhs.getAddress(),
+                  mhs.getGender(), mhs.getProfile_image()));
+
+          startActivity(intent);
         }
       }); // btnUpdateMhs
 

@@ -3,15 +3,24 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_add_dosen.xml" value="0.536" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_add_jurusan.xml" value="0.4" />
-        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_add_mahasiswa.xml" value="0.536" />
-        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_dashboard.xml" value="0.536" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_add_mahasiswa.xml" value="0.264" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_add_matkul.xml" value="0.4" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_dashboard.xml" value="0.4" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_list_dosen.xml" value="0.264" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_list_jurusan.xml" value="0.4" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_list_mahasiswa.xml" value="0.2" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_list_matkul.xml" value="0.41243654822335024" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_main.xml" value="0.536" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_update_dosen.xml" value="0.536" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_update_jurusan.xml" value="0.4" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_update_mahasiswa.xml" value="0.536" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/activity_update_matkul.xml" value="0.4" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/list_dosen.xml" value="0.536" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/list_jurusan.xml" value="0.6" />
         <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/list_mahasiswa.xml" value="0.6" />
+        <entry key="..\:/coding/android_college/project_uas_mp/app/src/main/res/layout/list_matkul.xml" value="0.536" />
       </map>
     </option>
   </component>

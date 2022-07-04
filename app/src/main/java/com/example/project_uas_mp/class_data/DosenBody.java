@@ -3,7 +3,7 @@ package com.example.project_uas_mp.class_data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MahasiswaBody implements Parcelable {
+public class DosenBody implements Parcelable {
   private String id;
   private String name;
   private String phone_number;
@@ -11,7 +11,7 @@ public class MahasiswaBody implements Parcelable {
   private String gender;
   private String profile_image;
 
-  public MahasiswaBody(String id, String name, String phone_number, String address, String gender, String profile_image) {
+  public DosenBody(String id, String name, String phone_number, String address, String gender, String profile_image) {
     this.id = id;
     this.name = name;
     this.phone_number = phone_number;
@@ -93,7 +93,7 @@ public class MahasiswaBody implements Parcelable {
     this.profile_image = source.readString();
   }
 
-  protected MahasiswaBody(Parcel in) {
+  protected DosenBody(Parcel in) {
     this.id = in.readString();
     this.name = in.readString();
     this.phone_number = in.readString();
@@ -102,15 +102,15 @@ public class MahasiswaBody implements Parcelable {
     this.profile_image = in.readString();
   }
 
-  public static final Parcelable.Creator<MahasiswaBody> CREATOR = new Parcelable.Creator<MahasiswaBody>() {
+  public static final Parcelable.Creator<DosenBody> CREATOR = new Parcelable.Creator<DosenBody>() {
     @Override
-    public MahasiswaBody createFromParcel(Parcel source) {
-      return new MahasiswaBody(source);
+    public DosenBody createFromParcel(Parcel source) {
+      return new DosenBody(source);
     }
 
     @Override
-    public MahasiswaBody[] newArray(int size) {
-      return new MahasiswaBody[size];
+    public DosenBody[] newArray(int size) {
+      return new DosenBody[size];
     }
   };
 }

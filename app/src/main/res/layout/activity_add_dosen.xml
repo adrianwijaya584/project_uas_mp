@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".AddDosenActivity">
+
+  <ImageView
+    android:id="@+id/imvAddDosen"
+    android:layout_width="85dp"
+    android:layout_height="85dp"
+    android:layout_marginTop="8dp"
+    app:layout_constraintStart_toStartOf="@+id/textView25"
+    app:layout_constraintTop_toBottomOf="@+id/textView25"
+    app:srcCompat="@mipmap/ic_launcher" />
+
+  <TextView
+    android:id="@+id/textView25"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="32dp"
+    android:layout_marginTop="24dp"
+    android:text="Tambah Dosen"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/textView26"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="NIDN"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/imvAddDosen"
+    app:layout_constraintTop_toBottomOf="@+id/imvAddDosen" />
+
+  <EditText
+    android:id="@+id/etAddIdDosen"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@color/gray_500"
+    android:ems="10"
+    android:hint="NIDN Dosen"
+    android:inputType="textPersonName"
+    android:minHeight="48dp"
+    android:paddingLeft="10dp"
+    app:layout_constraintStart_toStartOf="@+id/textView26"
+    app:layout_constraintTop_toBottomOf="@+id/textView26" />
+
+  <TextView
+    android:id="@+id/textView27"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="Nama Dosen"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/textView25"
+    app:layout_constraintTop_toBottomOf="@+id/etAddIdDosen" />
+
+  <EditText
+    android:id="@+id/etAddNamaDosen"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@color/gray_500"
+    android:ems="10"
+    android:hint="Nama Dosen"
+    android:inputType="textPersonName"
+    android:minHeight="48dp"
+    android:paddingLeft="10dp"
+    app:layout_constraintStart_toStartOf="@+id/textView26"
+    app:layout_constraintTop_toBottomOf="@+id/textView27" />
+
+  <TextView
+    android:id="@+id/textView28"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="No Telp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/textView25"
+    app:layout_constraintTop_toBottomOf="@+id/etAddNamaDosen" />
+
+  <EditText
+    android:id="@+id/etAddTelpDosen"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@color/gray_500"
+    android:ems="10"
+    android:hint="No Telp"
+    android:inputType="phone"
+    android:minHeight="48dp"
+    android:paddingLeft="10dp"
+    app:layout_constraintStart_toStartOf="@+id/textView26"
+    app:layout_constraintTop_toBottomOf="@+id/textView28" />
+
+  <TextView
+    android:id="@+id/textView29"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="Alamat"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/textView25"
+    app:layout_constraintTop_toBottomOf="@+id/etAddTelpDosen" />
+
+  <EditText
+    android:id="@+id/etAddAlamatDosen"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@color/gray_500"
+    android:ems="10"
+    android:hint="Alamat"
+    android:inputType="textPersonName"
+    android:minHeight="48dp"
+    android:paddingLeft="10dp"
+    app:layout_constraintStart_toStartOf="@+id/textView26"
+    app:layout_constraintTop_toBottomOf="@+id/textView29" />
+
+  <TextView
+    android:id="@+id/textView30"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="Gender"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/textView25"
+    app:layout_constraintTop_toBottomOf="@+id/etAddAlamatDosen" />
+
+  <RadioGroup
+    android:id="@+id/rgGenderDosen"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:orientation="horizontal"
+    app:layout_constraintStart_toStartOf="@+id/textView25"
+    app:layout_constraintTop_toBottomOf="@+id/textView30">
+
+    <RadioButton
+      android:id="@+id/dosenLakiLaki"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:checked="true"
+      android:text="Laki-laki" />
+
+    <RadioButton
+      android:id="@+id/dosenPerempuan"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:text="Perempuan" />
+  </RadioGroup>
+
+  <Button
+    android:id="@+id/btnSendAddDosen"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:backgroundTint="#4CAF50"
+    android:text="Kirim"
+    app:layout_constraintEnd_toEndOf="@+id/etAddNamaJ"
+    app:layout_constraintStart_toStartOf="@+id/rgGenderDosen"
+    app:layout_constraintTop_toBottomOf="@+id/rgGenderDosen" />
+
+  <Button
+    android:id="@+id/btnFileAddDosen"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:text="Pilih FIle"
+    app:layout_constraintBottom_toBottomOf="@+id/imvAddDosen"
+    app:layout_constraintStart_toEndOf="@+id/imvAddDosen"
+    app:layout_constraintTop_toTopOf="@+id/imvAddDosen" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,11 @@
+
 package com.example.project_uas_mp.class_data;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MahasiswaApiResponse {
+public class MatkulApiResponse {
   @SerializedName("success")
   private Boolean success;
 
@@ -15,13 +16,13 @@ public class MahasiswaApiResponse {
   private List<String> errors;
 
   @SerializedName("data")
-  private List<Mahasiswa> listMahasiswa;
+  private List<Matkul> listMatkul;
 
-  public MahasiswaApiResponse(Boolean success, String message, List<Mahasiswa> listMahasiswa, List<String> errors) {
+  public MatkulApiResponse(Boolean success, String message, List<String> errors, List<Matkul> listMatkul) {
     this.success = success;
-    this.message= message;
-    this.listMahasiswa = listMahasiswa;
-    this.errors= errors;
+    this.message = message;
+    this.errors = errors;
+    this.listMatkul = listMatkul;
   }
 
   public Boolean getSuccess() {
@@ -40,19 +41,19 @@ public class MahasiswaApiResponse {
     this.message = message;
   }
 
-  public List<Mahasiswa> getListMahasiswa() {
-    return listMahasiswa;
-  }
-
-  public void setListMahasiswa(List<Mahasiswa> listMahasiswa) {
-    this.listMahasiswa = listMahasiswa;
-  }
-
   public List<String> getErrors() {
     return errors;
   }
 
   public void setErrors(List<String> errors) {
     this.errors = errors;
+  }
+
+  public List<Matkul> getListMatkul() {
+    return listMatkul;
+  }
+
+  public void setListMatkul(List<Matkul> listMatkul) {
+    this.listMatkul = listMatkul;
   }
 }

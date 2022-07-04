@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".AddMatkulActivity">
+
+  <TextView
+    android:id="@+id/textView9"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="32dp"
+    android:layout_marginTop="16dp"
+    android:text="Tambah Matkul"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/textView32"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:text="Nama Matkul"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/textView9"
+    app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+  <EditText
+    android:id="@+id/etAddNamaMatkul"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@color/gray_500"
+    android:ems="10"
+    android:hint="Nama Matkul"
+    android:inputType="textPersonName"
+    android:minHeight="48dp"
+    android:paddingLeft="10dp"
+    app:layout_constraintStart_toStartOf="@+id/textView32"
+    app:layout_constraintTop_toBottomOf="@+id/textView32" />
+
+  <TextView
+    android:id="@+id/textView33"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="Jumlah SKS"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/etAddNamaMatkul"
+    app:layout_constraintTop_toBottomOf="@+id/etAddNamaMatkul" />
+
+  <TextView
+    android:id="@+id/textView34"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="Jurusan"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/spSks"
+    app:layout_constraintTop_toBottomOf="@+id/spSks" />
+
+  <Spinner
+    android:id="@+id/spSks"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:contentDescription="SKS"
+    android:minHeight="48dp"
+    app:layout_constraintStart_toStartOf="@+id/textView33"
+    app:layout_constraintTop_toBottomOf="@+id/textView33" />
+
+  <Spinner
+    android:id="@+id/spJurusan"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:contentDescription="SKS"
+    android:minHeight="48dp"
+    app:layout_constraintStart_toStartOf="@+id/textView34"
+    app:layout_constraintTop_toBottomOf="@+id/textView34" />
+
+  <Button
+    android:id="@+id/btnSendAddMatkul"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:backgroundTint="#4CAF50"
+    android:text="Kirim"
+    app:layout_constraintEnd_toEndOf="@+id/etAddNamaJ"
+    app:layout_constraintStart_toStartOf="@+id/spJurusan"
+    app:layout_constraintTop_toBottomOf="@+id/spJurusan" />
+</androidx.constraintlayout.widget.ConstraintLayout>

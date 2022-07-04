@@ -14,18 +14,18 @@
     android:backgroundTint="#4CAF50"
     android:text="Kirim"
     app:layout_constraintEnd_toEndOf="@+id/etAddNamaJ"
-    app:layout_constraintStart_toStartOf="@+id/rgAddGenderMhs"
-    app:layout_constraintTop_toBottomOf="@+id/rgAddGenderMhs" />
+    app:layout_constraintStart_toStartOf="@+id/rgGenderDosen"
+    app:layout_constraintTop_toBottomOf="@+id/rgGenderDosen" />
 
   <TextView
     android:id="@+id/textView11"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
+    android:layout_marginTop="8dp"
     android:text="NIM"
     android:textStyle="bold"
-    app:layout_constraintStart_toStartOf="@+id/textView10"
-    app:layout_constraintTop_toBottomOf="@+id/textView10" />
+    app:layout_constraintStart_toStartOf="@+id/imvAddMhs"
+    app:layout_constraintTop_toBottomOf="@+id/imvAddMhs" />
 
   <TextView
     android:id="@+id/textView12"
@@ -46,6 +46,40 @@
     android:textStyle="bold"
     app:layout_constraintStart_toStartOf="@+id/etAddTelpMhs"
     app:layout_constraintTop_toBottomOf="@+id/etAddTelpMhs" />
+
+  <TextView
+    android:id="@+id/textView24"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:text="Gender"
+    android:textStyle="bold"
+    app:layout_constraintStart_toStartOf="@+id/etAddAlamatMhs"
+    app:layout_constraintTop_toBottomOf="@+id/etAddAlamatMhs" />
+
+  <RadioGroup
+    android:id="@+id/rgGenderDosen"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:orientation="horizontal"
+    app:layout_constraintStart_toStartOf="@+id/textView24"
+    app:layout_constraintTop_toBottomOf="@+id/textView24">
+
+    <RadioButton
+      android:id="@+id/dosenLakiLaki"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:checked="true"
+      android:text="Laki-laki" />
+
+    <RadioButton
+      android:id="@+id/dosenPerempuan"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:text="Perempuan" />
+  </RadioGroup>
 
   <TextView
     android:id="@+id/textView13"
@@ -125,27 +159,24 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
-  <RadioGroup
-    android:id="@+id/rgAddGenderMhs"
+  <ImageView
+    android:id="@+id/imvAddMhs"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:layout_marginTop="16dp"
+    app:layout_constraintStart_toStartOf="@+id/textView10"
+    app:layout_constraintTop_toBottomOf="@+id/textView10"
+    app:srcCompat="@mipmap/ic_launcher" />
+
+  <Button
+    android:id="@+id/btnFileAddMhs"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:orientation="horizontal"
-    app:layout_constraintStart_toStartOf="@+id/etAddAlamatMhs"
-    app:layout_constraintTop_toBottomOf="@+id/etAddAlamatMhs">
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:text="Pilih File"
+    app:layout_constraintBottom_toBottomOf="@+id/imvAddMhs"
+    app:layout_constraintStart_toEndOf="@+id/imvAddMhs"
+    app:layout_constraintTop_toTopOf="@+id/imvAddMhs" />
 
-    <RadioButton
-      android:id="@+id/radioButton"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:checked="true"
-      android:text="Laki-laki" />
-
-    <RadioButton
-      android:id="@+id/radioButton2"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="10dp"
-      android:text="Perempuan" />
-  </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

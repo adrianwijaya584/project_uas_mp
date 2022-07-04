@@ -41,7 +41,7 @@
     app:layout_constraintTop_toBottomOf="@+id/tvWelcome" />
 
   <TextView
-    android:id="@+id/textView8"
+    android:id="@+id/tvNavDosen"
     android:layout_width="150dp"
     android:layout_height="100dp"
     android:layout_marginTop="24dp"
@@ -53,7 +53,7 @@
     app:layout_constraintTop_toBottomOf="@+id/tvNavJurusan" />
 
   <TextView
-    android:id="@+id/textView9"
+    android:id="@+id/tvNavMatkul"
     android:layout_width="150dp"
     android:layout_height="100dp"
     android:background="@color/gray_500"
@@ -61,7 +61,7 @@
     android:text="Mata Kuliah"
     android:textAlignment="center"
     app:layout_constraintStart_toStartOf="@+id/tvNavMahasiswa"
-    app:layout_constraintTop_toTopOf="@+id/textView8" />
+    app:layout_constraintTop_toTopOf="@+id/tvNavDosen" />
 
   <TextView
     android:id="@+id/tvNavMahasiswa"

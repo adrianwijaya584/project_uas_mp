@@ -66,6 +66,12 @@ public class UpdateJurusanActivity extends AppCompatActivity {
     String namaJurusan= etUpdateNamaJ.getText().toString();
 
     if (namaJurusan.equals("")) {
+      Toast.makeText(UpdateJurusanActivity.this, "Harap memasukan nama jurusan", Toast.LENGTH_SHORT).show();
+      etUpdateNamaJ.requestFocus();
+      return;
+    }
+
+    if (namaJurusan.equals("")) {
       Toast.makeText(this, "Harap isi nama jurusan", Toast.LENGTH_SHORT).show();
       etUpdateNamaJ.requestFocus();
       return;
