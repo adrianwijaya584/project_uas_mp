@@ -14,7 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppConfig {
-  public static String BASE_URL= "http://192.168.1.14:3000/";
+  public static String BASE_URL= "http://192.168.1.11:3000/";
 
   public static ApiRequest requestConfig(Context ctx) {
     SharedPreferences editor= PreferenceManager.getDefaultSharedPreferences(ctx);

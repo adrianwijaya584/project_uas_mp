@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,8 +22,10 @@ import android.widget.Toast;
 import com.example.project_uas_mp.class_data.Matkul;
 import com.example.project_uas_mp.class_data.MatkulApiResponse;
 import com.example.project_uas_mp.config.AppConfig;
+import com.example.project_uas_mp.config.Sqlite;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,10 +38,19 @@ public class ListMatkulActivity extends AppCompatActivity {
 
   List<Matkul> dataMatkul= new ArrayList<>();
 
+  SharedPreferences sp;
+  SharedPreferences.Editor editor;
+
+  Sqlite db;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_list_matkul);
+
+    sp= PreferenceManager.getDefaultSharedPreferences(ListMatkulActivity.this);
+    editor= sp.edit();
+    db= new Sqlite(ListMatkulActivity.this);
 
     btnAddMatkul= findViewById(R.id.btnAddMatkul);
     lvMatkul= findViewById(R.id.lvMatkul);
@@ -53,8 +66,8 @@ public class ListMatkulActivity extends AppCompatActivity {
   } // oncreate
 
   @Override
-  protected void onStart() {
-    super.onStart();
+  protected void onResume() {
+    super.onResume();
 
     getMatktul();
   }
@@ -77,6 +90,8 @@ public class ListMatkulActivity extends AppCompatActivity {
           return;
         }
 
+        editor.remove("matkulCache").apply();
+
         Toast.makeText(ListMatkulActivity.this, "Matkul berhasil dihapus", Toast.LENGTH_SHORT).show();
 
         getMatktul();
@@ -92,6 +107,17 @@ public class ListMatkulActivity extends AppCompatActivity {
   private void getMatktul() {
     dataMatkul.clear();
 
+    long diff= new Date().getTime() - sp.getLong("matkulCache", 0);
+    long seconds= diff / 1000;
+
+    if (seconds<20) {
+      dataMatkul= db.getAllMatkul();
+
+      setAdapter();
+
+      return;
+    }
+
     Call<MatkulApiResponse> call= AppConfig.requestConfig(getApplicationContext()).getAllMatkul();
 
     call.enqueue(new Callback<MatkulApiResponse>() {
@@ -102,6 +128,11 @@ public class ListMatkulActivity extends AppCompatActivity {
         }
 
         dataMatkul= response.body().getListMatkul();
+
+        editor.putLong("matkulCache", new Date().getTime()).apply();
+
+        db.deleteMatkul();
+        db.insertMatkul(dataMatkul);
 
         setAdapter();
       }

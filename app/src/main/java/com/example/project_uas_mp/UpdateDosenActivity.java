@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -210,6 +211,9 @@ public class UpdateDosenActivity extends AppCompatActivity {
         }
 
         Toast.makeText(UpdateDosenActivity.this, "Data dosen berhasil diupdate", Toast.LENGTH_SHORT).show();
+
+        PreferenceManager.getDefaultSharedPreferences(UpdateDosenActivity.this).edit()
+            .remove("cacheDosen").apply();
 
         finish();
       }

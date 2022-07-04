@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -161,6 +162,9 @@ public class UpdateMatkulActivity extends AppCompatActivity {
         }
 
         Toast.makeText(UpdateMatkulActivity.this, "mata kuliah berhasil diubah", Toast.LENGTH_SHORT).show();
+
+        PreferenceManager.getDefaultSharedPreferences(UpdateMatkulActivity.this)
+            .edit().remove("matkulCache").apply();
 
         finish();
       }

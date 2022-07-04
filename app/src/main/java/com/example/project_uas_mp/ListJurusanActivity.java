@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +23,13 @@ import android.widget.Toast;
 import com.example.project_uas_mp.class_data.Jurusan;
 import com.example.project_uas_mp.class_data.JurusanApiResponse;
 import com.example.project_uas_mp.config.AppConfig;
+import com.example.project_uas_mp.config.Sqlite;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,11 +39,18 @@ public class ListJurusanActivity extends AppCompatActivity {
   Button btnAddJurusan;
   ListView lvJurusan;
   List<Jurusan> dataJurusan= new ArrayList();
+  Sqlite db;
+  SharedPreferences sp;
+  SharedPreferences.Editor editor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_list_jurusan);
+
+    db=  new Sqlite(ListJurusanActivity.this);
+    sp= PreferenceManager.getDefaultSharedPreferences(ListJurusanActivity.this);
+    editor= sp.edit();
 
     btnAddJurusan= findViewById(R.id.btnAddJurusan);
     lvJurusan= findViewById(R.id.lvMatkul);
@@ -65,14 +77,24 @@ public class ListJurusanActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onStart() {
-    super.onStart();
+  protected void onResume() {
+    super.onResume();
 
     getData();
   }
 
   private void getData() {
     Call<JurusanApiResponse> request= AppConfig.requestConfig(getApplicationContext()).getAllJurusan();
+
+    long diff=  new Date().getTime() - sp.getLong("jurusanCache", 0);
+    long seconds= diff/1000;
+
+    // mengecek apabila cache belum berusia 20 detik maka data akan diambil dari cache
+    if (seconds<20) {
+      dataJurusan= db.getAllJurusan();
+      setAdapter();
+      return;
+    }
 
     request.enqueue(new Callback<JurusanApiResponse>() {
       @Override
@@ -84,6 +106,12 @@ public class ListJurusanActivity extends AppCompatActivity {
         }
 
         dataJurusan= res.getListJurusan();
+
+        editor.putLong("jurusanCache", new Date().getTime());
+        editor.apply();
+
+        db.deleteJurusan();
+        db.insertJurusan(dataJurusan);
 
         setAdapter();
       }
@@ -116,6 +144,9 @@ public class ListJurusanActivity extends AppCompatActivity {
         }
 
         Toast.makeText(ListJurusanActivity.this, "Jurusan berhasil dihapus", Toast.LENGTH_SHORT).show();
+
+        // hapus penyimpanan cache di SP
+        editor.remove("jurusanCache").apply();
 
         getData();
       }

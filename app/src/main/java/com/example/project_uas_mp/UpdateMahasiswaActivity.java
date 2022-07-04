@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -216,6 +217,9 @@ public class UpdateMahasiswaActivity extends AppCompatActivity {
         }
 
         Toast.makeText(UpdateMahasiswaActivity.this, "Data mahasiswa berhasil diubah", Toast.LENGTH_SHORT).show();
+
+        PreferenceManager.getDefaultSharedPreferences(UpdateMahasiswaActivity.this).edit()
+            .remove("mahasiswaCache").apply();
 
         finish();
       }

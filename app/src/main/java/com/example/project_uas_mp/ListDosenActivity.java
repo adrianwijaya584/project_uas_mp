@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -22,10 +24,12 @@ import com.example.project_uas_mp.class_data.Dosen;
 import com.example.project_uas_mp.class_data.DosenApiResponse;
 import com.example.project_uas_mp.class_data.DosenBody;
 import com.example.project_uas_mp.config.AppConfig;
+import com.example.project_uas_mp.config.Sqlite;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,11 +40,18 @@ public class ListDosenActivity extends AppCompatActivity {
   Button btnAddDosen;
   ListView lvDosen;
   List<Dosen> dataDosen= new ArrayList<>();
+  Sqlite db;
+  SharedPreferences sp;
+  SharedPreferences.Editor editor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_list_dosen);
+
+    db= new Sqlite(ListDosenActivity.this);
+    sp= PreferenceManager.getDefaultSharedPreferences(ListDosenActivity.this);
+    editor= sp.edit();
 
     lvDosen= findViewById(R.id.lvDosen);
     btnAddDosen= findViewById(R.id.btnAddDosen);
@@ -56,8 +67,8 @@ public class ListDosenActivity extends AppCompatActivity {
   } // onCreate
 
   @Override
-  protected void onStart() {
-    super.onStart();
+  protected void onResume() {
+    super.onResume();
 
     getDosen();
   }
@@ -84,6 +95,8 @@ public class ListDosenActivity extends AppCompatActivity {
 
         Toast.makeText(ListDosenActivity.this, "Data dosen berhasil dihapus", Toast.LENGTH_SHORT).show();
 
+        editor.remove("cacheDosen").apply();
+
         getDosen();
       }
 
@@ -97,6 +110,19 @@ public class ListDosenActivity extends AppCompatActivity {
   }
 
   private void getDosen() {
+    dataDosen.clear();
+
+    Long diff= new Date().getTime() - sp.getLong("cacheDosen", 0);
+    Long seconds= diff / 1000;
+
+    if (seconds<20) {
+      dataDosen= db.getAllDosen();
+
+      setAdapter();
+
+      return;
+    }
+
     Call<DosenApiResponse> call= AppConfig.requestConfig(getApplicationContext()).getAllDosen();
 
     call.enqueue(new Callback<DosenApiResponse>() {
@@ -109,6 +135,11 @@ public class ListDosenActivity extends AppCompatActivity {
         DosenApiResponse apiResponse= response.body();
 
         dataDosen= apiResponse.getData();
+
+        editor.putLong("cacheDosen",new Date().getTime()).apply();
+
+        db.deleteDosen();
+        db.insertDosen(dataDosen);
 
         setAdapter();
       }

@@ -3,6 +3,7 @@ package com.example.project_uas_mp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -64,6 +65,9 @@ public class AddJurusanActivity extends AppCompatActivity {
             }
 
             JurusanApiResponse body= response.body();
+
+            PreferenceManager.getDefaultSharedPreferences(AddJurusanActivity.this).edit()
+                .remove("jurusanCache").apply();
 
             Toast.makeText(AddJurusanActivity.this, "Jurusan berhasil ditambah", Toast.LENGTH_SHORT).show();
 

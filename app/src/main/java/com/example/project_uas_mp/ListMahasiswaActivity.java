@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,10 +23,12 @@ import com.example.project_uas_mp.class_data.Mahasiswa;
 import com.example.project_uas_mp.class_data.MahasiswaApiResponse;
 import com.example.project_uas_mp.class_data.MahasiswaBody;
 import com.example.project_uas_mp.config.AppConfig;
+import com.example.project_uas_mp.config.Sqlite;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,11 +39,18 @@ public class ListMahasiswaActivity extends AppCompatActivity {
   List<Mahasiswa> dataMhs= new ArrayList<>();
   Button btnAddMhs;
   ListView lvMhs;
+  Sqlite db;
+  SharedPreferences sp;
+  SharedPreferences.Editor editor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_list_mahasiswa);
+
+    db= new Sqlite(ListMahasiswaActivity.this);
+    sp= PreferenceManager.getDefaultSharedPreferences(ListMahasiswaActivity.this);
+    editor= sp.edit();
 
     btnAddMhs= findViewById(R.id.btnAddMhs);
     lvMhs= findViewById(R.id.lvMhs);
@@ -56,9 +67,10 @@ public class ListMahasiswaActivity extends AppCompatActivity {
   } // onCreate
 
   @Override
-  protected void onStart() {
+  protected void onResume() {
+    super.onResume();
+
     getData();
-    super.onStart();
   }
 
   private void setAdapter() {
@@ -83,6 +95,8 @@ public class ListMahasiswaActivity extends AppCompatActivity {
 
         Toast.makeText(ListMahasiswaActivity.this, "Data mahasiswa berhasil dihapus", Toast.LENGTH_SHORT).show();
 
+        editor.remove("mahasiswaCache").apply();
+
         getData();
       }
 
@@ -98,6 +112,18 @@ public class ListMahasiswaActivity extends AppCompatActivity {
   private void getData() {
     dataMhs.clear();
 
+    Long diff= new Date().getTime() - sp.getLong("mahasiswaCache", 0);
+    Long seconds= diff / 1000;
+
+
+    if (seconds<20) {
+      dataMhs= db.getAllMahasiswa();
+
+      setAdapter();
+
+      return;
+    }
+
     Call<MahasiswaApiResponse> responseCall= AppConfig.requestConfig(getApplicationContext()).getAllMahasiswa();
 
     responseCall.enqueue(new Callback<MahasiswaApiResponse>() {
@@ -108,6 +134,11 @@ public class ListMahasiswaActivity extends AppCompatActivity {
         }
 
         dataMhs= response.body().getListMahasiswa();
+
+        db.deleteMahasiswa();
+        db.insertMahasiswa(dataMhs);
+
+        editor.putLong("mahasiswaCache", new Date().getTime()).apply();
 
         setAdapter();
 

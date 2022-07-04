@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -90,6 +91,9 @@ public class UpdateJurusanActivity extends AppCompatActivity {
 
           return;
         }
+
+        PreferenceManager.getDefaultSharedPreferences(UpdateJurusanActivity.this).edit()
+            .remove("jurusanCache").apply();
 
         Toast.makeText(UpdateJurusanActivity.this, "jurusan berhasil diupdate", Toast.LENGTH_SHORT).show();
 

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -184,6 +185,9 @@ public class AddMahasiswaActivity extends AppCompatActivity {
         }
 
         Toast.makeText(AddMahasiswaActivity.this, "Berhasil menambahkan mahasiswa", Toast.LENGTH_SHORT).show();
+
+        PreferenceManager.getDefaultSharedPreferences(AddMahasiswaActivity.this).edit()
+                .remove("mahasiswaCache").apply();
 
         finish();
       }

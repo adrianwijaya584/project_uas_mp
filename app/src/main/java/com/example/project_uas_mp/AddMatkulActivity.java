@@ -3,6 +3,7 @@ package com.example.project_uas_mp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -82,7 +83,6 @@ public class AddMatkulActivity extends AppCompatActivity {
 
         jurusan= response.body().getListJurusan();
 
-
         spJurusan.setAdapter(jurusanAdapter());
       }
 
@@ -112,6 +112,9 @@ public class AddMatkulActivity extends AppCompatActivity {
 
           return;
         }
+
+        PreferenceManager.getDefaultSharedPreferences(AddMatkulActivity.this)
+                .edit().remove("matkulCache").apply();
 
         Toast.makeText(AddMatkulActivity.this, "Matkul berhasil ditambahkan", Toast.LENGTH_SHORT).show();
 

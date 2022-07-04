@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -180,6 +181,9 @@ public class AddDosenActivity extends AppCompatActivity {
         }
 
         Toast.makeText(AddDosenActivity.this, "Data dosen berhasil ditambahkan", Toast.LENGTH_SHORT).show();
+
+        PreferenceManager.getDefaultSharedPreferences(AddDosenActivity.this).edit()
+            .remove("cacheDosen").apply();
 
         finish();
       }
