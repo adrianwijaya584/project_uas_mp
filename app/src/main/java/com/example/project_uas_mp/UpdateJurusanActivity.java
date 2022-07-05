@@ -92,9 +92,6 @@ public class UpdateJurusanActivity extends AppCompatActivity {
           return;
         }
 
-        PreferenceManager.getDefaultSharedPreferences(UpdateJurusanActivity.this).edit()
-            .remove("jurusanCache").apply();
-
         Toast.makeText(UpdateJurusanActivity.this, "jurusan berhasil diupdate", Toast.LENGTH_SHORT).show();
 
         finish();

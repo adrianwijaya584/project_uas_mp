@@ -25,6 +25,7 @@ import com.example.project_uas_mp.class_data.DosenApiResponse;
 import com.example.project_uas_mp.class_data.DosenBody;
 import com.example.project_uas_mp.config.AppConfig;
 import com.example.project_uas_mp.config.Sqlite;
+import com.example.project_uas_mp.config.Utils;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -41,8 +42,6 @@ public class ListDosenActivity extends AppCompatActivity {
   ListView lvDosen;
   List<Dosen> dataDosen= new ArrayList<>();
   Sqlite db;
-  SharedPreferences sp;
-  SharedPreferences.Editor editor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +49,6 @@ public class ListDosenActivity extends AppCompatActivity {
     setContentView(R.layout.activity_list_dosen);
 
     db= new Sqlite(ListDosenActivity.this);
-    sp= PreferenceManager.getDefaultSharedPreferences(ListDosenActivity.this);
-    editor= sp.edit();
 
     lvDosen= findViewById(R.id.lvDosen);
     btnAddDosen= findViewById(R.id.btnAddDosen);
@@ -95,8 +92,6 @@ public class ListDosenActivity extends AppCompatActivity {
 
         Toast.makeText(ListDosenActivity.this, "Data dosen berhasil dihapus", Toast.LENGTH_SHORT).show();
 
-        editor.remove("cacheDosen").apply();
-
         getDosen();
       }
 
@@ -112,13 +107,11 @@ public class ListDosenActivity extends AppCompatActivity {
   private void getDosen() {
     dataDosen.clear();
 
-    Long diff= new Date().getTime() - sp.getLong("cacheDosen", 0);
-    Long seconds= diff / 1000;
-
-    if (seconds<20) {
+    if (!Utils.isNetworkAvailable(this)) {
       dataDosen= db.getAllDosen();
-
       setAdapter();
+
+      Toast.makeText(this, "Tidak ada internet.", Toast.LENGTH_SHORT).show();
 
       return;
     }
@@ -135,8 +128,6 @@ public class ListDosenActivity extends AppCompatActivity {
         DosenApiResponse apiResponse= response.body();
 
         dataDosen= apiResponse.getData();
-
-        editor.putLong("cacheDosen",new Date().getTime()).apply();
 
         db.deleteDosen();
         db.insertDosen(dataDosen);

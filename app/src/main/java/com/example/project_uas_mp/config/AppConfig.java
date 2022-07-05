@@ -17,7 +17,7 @@ public class AppConfig {
   public static String BASE_URL= "http://192.168.1.11:3000/";
 
   public static ApiRequest requestConfig(Context ctx) {
-    SharedPreferences editor= PreferenceManager.getDefaultSharedPreferences(ctx);
+    SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(ctx);
 
     OkHttpClient.Builder httpClient= new OkHttpClient.Builder();
 
@@ -25,7 +25,7 @@ public class AppConfig {
       @Override
       public Response intercept(Chain chain) throws IOException {
         Request request= chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer "+editor.getString("token", "")).build();
+            .addHeader("Authorization", "Bearer "+sp.getString("token", "")).build();
         return chain.proceed(request);
       }
     });

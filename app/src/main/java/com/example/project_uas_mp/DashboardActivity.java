@@ -41,6 +41,10 @@ public class DashboardActivity extends AppCompatActivity {
       ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
     }
 
+    if (checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 1);
+    }
+
     sp= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
     tvWelcome= findViewById(R.id.tvWelcome);
@@ -50,7 +54,7 @@ public class DashboardActivity extends AppCompatActivity {
     tvNavDosen= findViewById(R.id.tvNavDosen);
     tvNavMatkul= findViewById(R.id.tvNavMatkul);
 
-    tvWelcome.setText("Selamat datang "+sp.getString("username", "")+"!");
+    tvWelcome.setText("Selamat datang ".concat(sp.getString("name", "")+"!"));
 
     tvNavJurusan.setOnClickListener(new View.OnClickListener() {
       @Override

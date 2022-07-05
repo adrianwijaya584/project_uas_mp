@@ -64,11 +64,6 @@ public class AddJurusanActivity extends AppCompatActivity {
               return;
             }
 
-            JurusanApiResponse body= response.body();
-
-            PreferenceManager.getDefaultSharedPreferences(AddJurusanActivity.this).edit()
-                .remove("jurusanCache").apply();
-
             Toast.makeText(AddJurusanActivity.this, "Jurusan berhasil ditambah", Toast.LENGTH_SHORT).show();
 
             finish();

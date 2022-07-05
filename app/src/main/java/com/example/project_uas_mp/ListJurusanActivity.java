@@ -24,6 +24,7 @@ import com.example.project_uas_mp.class_data.Jurusan;
 import com.example.project_uas_mp.class_data.JurusanApiResponse;
 import com.example.project_uas_mp.config.AppConfig;
 import com.example.project_uas_mp.config.Sqlite;
+import com.example.project_uas_mp.config.Utils;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -40,8 +41,6 @@ public class ListJurusanActivity extends AppCompatActivity {
   ListView lvJurusan;
   List<Jurusan> dataJurusan= new ArrayList();
   Sqlite db;
-  SharedPreferences sp;
-  SharedPreferences.Editor editor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +48,6 @@ public class ListJurusanActivity extends AppCompatActivity {
     setContentView(R.layout.activity_list_jurusan);
 
     db=  new Sqlite(ListJurusanActivity.this);
-    sp= PreferenceManager.getDefaultSharedPreferences(ListJurusanActivity.this);
-    editor= sp.edit();
 
     btnAddJurusan= findViewById(R.id.btnAddJurusan);
     lvJurusan= findViewById(R.id.lvMatkul);
@@ -86,13 +83,10 @@ public class ListJurusanActivity extends AppCompatActivity {
   private void getData() {
     Call<JurusanApiResponse> request= AppConfig.requestConfig(getApplicationContext()).getAllJurusan();
 
-    long diff=  new Date().getTime() - sp.getLong("jurusanCache", 0);
-    long seconds= diff/1000;
-
-    // mengecek apabila cache belum berusia 20 detik maka data akan diambil dari cache
-    if (seconds<20) {
+    if (!Utils.isNetworkAvailable(this)) {
       dataJurusan= db.getAllJurusan();
       setAdapter();
+      Toast.makeText(this, "Tidak ada internet.", Toast.LENGTH_SHORT).show();
       return;
     }
 
@@ -106,9 +100,6 @@ public class ListJurusanActivity extends AppCompatActivity {
         }
 
         dataJurusan= res.getListJurusan();
-
-        editor.putLong("jurusanCache", new Date().getTime());
-        editor.apply();
 
         db.deleteJurusan();
         db.insertJurusan(dataJurusan);
@@ -144,9 +135,6 @@ public class ListJurusanActivity extends AppCompatActivity {
         }
 
         Toast.makeText(ListJurusanActivity.this, "Jurusan berhasil dihapus", Toast.LENGTH_SHORT).show();
-
-        // hapus penyimpanan cache di SP
-        editor.remove("jurusanCache").apply();
 
         getData();
       }

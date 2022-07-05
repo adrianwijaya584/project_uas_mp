@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
@@ -56,10 +57,10 @@ public class AddMahasiswaActivity extends AppCompatActivity {
     btnSendAddMhs= findViewById(R.id.btnSendAddMhs);
     btnFileAddMhs= findViewById(R.id.btnFileAddMhs);
 
-    etAddNimMhs.setText("200001");
-    etAddNamaMhs.setText("nama");
-    etAddTelpMhs.setText("0101010");
-    etAddAlamatMhs.setText("Jln");
+//    etAddNimMhs.setText("200001");
+//    etAddNamaMhs.setText("nama");
+//    etAddTelpMhs.setText("0101010");
+//    etAddAlamatMhs.setText("Jln");
 
     btnFileAddMhs.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -102,6 +103,11 @@ public class AddMahasiswaActivity extends AppCompatActivity {
             .addFormDataPart("file", sourceFile.getName(), file)
             .build();
 
+        ProgressDialog progressDialog= new ProgressDialog(this);
+        progressDialog.setMessage("Gambar sedang diupload");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         Call<FilesApiResponse> call= AppConfig.requestConfig(getApplicationContext()).uploadFile(body);
 
         call.enqueue(new Callback<FilesApiResponse>() {
@@ -109,13 +115,12 @@ public class AddMahasiswaActivity extends AppCompatActivity {
           public void onResponse(Call<FilesApiResponse> call, Response<FilesApiResponse> response) {
             if (!response.isSuccessful()) {
               Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
-
-              return;
+            } else {
+              filename = response.body().getData().getName();
+              imvAddMhs.setImageURI(data.getData());
             }
 
-            filename = response.body().getData().getName();
-
-            imvAddMhs.setImageURI(data.getData());
+            progressDialog.dismiss();
           }
 
           @Override
@@ -123,6 +128,8 @@ public class AddMahasiswaActivity extends AppCompatActivity {
             Log.d("uploadFile", t.getLocalizedMessage());
 
             Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
+
+            progressDialog.dismiss();
           }
         });
 
@@ -186,16 +193,12 @@ public class AddMahasiswaActivity extends AppCompatActivity {
 
         Toast.makeText(AddMahasiswaActivity.this, "Berhasil menambahkan mahasiswa", Toast.LENGTH_SHORT).show();
 
-        PreferenceManager.getDefaultSharedPreferences(AddMahasiswaActivity.this).edit()
-                .remove("mahasiswaCache").apply();
-
         finish();
       }
 
       @Override
       public void onFailure(Call<MahasiswaApiResponse> call, Throwable t) {
-        filename= null;
-        System.out.println(t.getLocalizedMessage());
+        Log.e("apiError", t.getLocalizedMessage());
 
         Toast.makeText(AddMahasiswaActivity.this, "Gagal menambahkan mahasiswa", Toast.LENGTH_SHORT).show();
       }

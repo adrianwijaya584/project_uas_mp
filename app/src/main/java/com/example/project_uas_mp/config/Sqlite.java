@@ -46,8 +46,7 @@ public class Sqlite extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    // delete table if upgrade
-
+    // delete semua table
     db.execSQL("DROP TABLE IF EXISTS jurusan");
     db.execSQL("DROP TABLE IF EXISTS mahasiswa");
     db.execSQL("DROP TABLE IF EXISTS dosen");
@@ -87,11 +86,12 @@ public class Sqlite extends SQLiteOpenHelper {
 
         db.insertOrThrow("jurusan",null, cv);
       }
-
-      db.close();
     } catch (Exception e) {
       Log.e(TAG, e.getLocalizedMessage());
     }
+
+    db.close();
+
   } // insertJurusan
 
   public void deleteJurusan() {

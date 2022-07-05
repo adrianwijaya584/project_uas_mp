@@ -23,6 +23,7 @@ import com.example.project_uas_mp.class_data.Matkul;
 import com.example.project_uas_mp.class_data.MatkulApiResponse;
 import com.example.project_uas_mp.config.AppConfig;
 import com.example.project_uas_mp.config.Sqlite;
+import com.example.project_uas_mp.config.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,9 +39,6 @@ public class ListMatkulActivity extends AppCompatActivity {
 
   List<Matkul> dataMatkul= new ArrayList<>();
 
-  SharedPreferences sp;
-  SharedPreferences.Editor editor;
-
   Sqlite db;
 
   @Override
@@ -48,8 +46,6 @@ public class ListMatkulActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_list_matkul);
 
-    sp= PreferenceManager.getDefaultSharedPreferences(ListMatkulActivity.this);
-    editor= sp.edit();
     db= new Sqlite(ListMatkulActivity.this);
 
     btnAddMatkul= findViewById(R.id.btnAddMatkul);
@@ -90,8 +86,6 @@ public class ListMatkulActivity extends AppCompatActivity {
           return;
         }
 
-        editor.remove("matkulCache").apply();
-
         Toast.makeText(ListMatkulActivity.this, "Matkul berhasil dihapus", Toast.LENGTH_SHORT).show();
 
         getMatktul();
@@ -107,12 +101,9 @@ public class ListMatkulActivity extends AppCompatActivity {
   private void getMatktul() {
     dataMatkul.clear();
 
-    long diff= new Date().getTime() - sp.getLong("matkulCache", 0);
-    long seconds= diff / 1000;
-
-    if (seconds<20) {
+    if (!Utils.isNetworkAvailable(this)) {
       dataMatkul= db.getAllMatkul();
-
+      Toast.makeText(this, "Tidak ada internet.", Toast.LENGTH_SHORT).show();
       setAdapter();
 
       return;
@@ -129,7 +120,6 @@ public class ListMatkulActivity extends AppCompatActivity {
 
         dataMatkul= response.body().getListMatkul();
 
-        editor.putLong("matkulCache", new Date().getTime()).apply();
 
         db.deleteMatkul();
         db.insertMatkul(dataMatkul);

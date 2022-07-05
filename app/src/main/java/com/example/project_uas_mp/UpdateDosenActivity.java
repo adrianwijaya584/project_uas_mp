@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -131,6 +132,11 @@ public class UpdateDosenActivity extends AppCompatActivity {
             .addFormDataPart("file", sourceFile.getName(), file)
             .build();
 
+        ProgressDialog progressDialog= new ProgressDialog(this);
+        progressDialog.setMessage("Gambar sedang diupload");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         Call<FilesApiResponse> call= AppConfig.requestConfig(getApplicationContext()).uploadFile(body);
 
         call.enqueue(new Callback<FilesApiResponse>() {
@@ -140,22 +146,24 @@ public class UpdateDosenActivity extends AppCompatActivity {
               filename= dosen.getProfile_image();
 
               Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
+            } else {
+              filename = response.body().getData().getName();
 
-              return;
+              imvUpdateDosen.setImageURI(data.getData());
             }
 
-            filename = response.body().getData().getName();
-
-            imvUpdateDosen.setImageURI(data.getData());
+            progressDialog.dismiss();
           }
 
           @Override
           public void onFailure(Call<FilesApiResponse> call, Throwable t) {
             filename= dosen.getProfile_image();
 
-            Log.d("uploadFile", t.getLocalizedMessage());
+            Log.e("uploadFile", t.getLocalizedMessage());
 
             Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
+
+            progressDialog.dismiss();
           }
         });
 
@@ -211,9 +219,6 @@ public class UpdateDosenActivity extends AppCompatActivity {
         }
 
         Toast.makeText(UpdateDosenActivity.this, "Data dosen berhasil diupdate", Toast.LENGTH_SHORT).show();
-
-        PreferenceManager.getDefaultSharedPreferences(UpdateDosenActivity.this).edit()
-            .remove("cacheDosen").apply();
 
         finish();
       }

@@ -2,12 +2,17 @@ package com.example.project_uas_mp.config;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 
 public class Utils {
-  public static void nextFun() {
-
+  public static Boolean isNetworkAvailable(Context ctx) {
+    ConnectivityManager connectivityManager
+        = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
   }
 
   public static String getRealPathFromURI(Context context, Uri contentUri) {

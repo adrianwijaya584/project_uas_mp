@@ -163,9 +163,6 @@ public class UpdateMatkulActivity extends AppCompatActivity {
 
         Toast.makeText(UpdateMatkulActivity.this, "mata kuliah berhasil diubah", Toast.LENGTH_SHORT).show();
 
-        PreferenceManager.getDefaultSharedPreferences(UpdateMatkulActivity.this)
-            .edit().remove("matkulCache").apply();
-
         finish();
       }
 

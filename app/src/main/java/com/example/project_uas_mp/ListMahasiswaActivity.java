@@ -24,6 +24,7 @@ import com.example.project_uas_mp.class_data.MahasiswaApiResponse;
 import com.example.project_uas_mp.class_data.MahasiswaBody;
 import com.example.project_uas_mp.config.AppConfig;
 import com.example.project_uas_mp.config.Sqlite;
+import com.example.project_uas_mp.config.Utils;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -95,8 +96,6 @@ public class ListMahasiswaActivity extends AppCompatActivity {
 
         Toast.makeText(ListMahasiswaActivity.this, "Data mahasiswa berhasil dihapus", Toast.LENGTH_SHORT).show();
 
-        editor.remove("mahasiswaCache").apply();
-
         getData();
       }
 
@@ -112,13 +111,9 @@ public class ListMahasiswaActivity extends AppCompatActivity {
   private void getData() {
     dataMhs.clear();
 
-    Long diff= new Date().getTime() - sp.getLong("mahasiswaCache", 0);
-    Long seconds= diff / 1000;
-
-
-    if (seconds<20) {
+    if (!Utils.isNetworkAvailable(this)) {
       dataMhs= db.getAllMahasiswa();
-
+      Toast.makeText(this, "Tidak ada internet.", Toast.LENGTH_SHORT).show();
       setAdapter();
 
       return;
@@ -137,8 +132,6 @@ public class ListMahasiswaActivity extends AppCompatActivity {
 
         db.deleteMahasiswa();
         db.insertMahasiswa(dataMhs);
-
-        editor.putLong("mahasiswaCache", new Date().getTime()).apply();
 
         setAdapter();
 

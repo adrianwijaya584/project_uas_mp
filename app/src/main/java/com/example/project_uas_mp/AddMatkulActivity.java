@@ -16,6 +16,7 @@ import com.example.project_uas_mp.class_data.JurusanApiResponse;
 import com.example.project_uas_mp.class_data.MatkulApiResponse;
 import com.example.project_uas_mp.class_data.MatkulBody;
 import com.example.project_uas_mp.config.AppConfig;
+import com.example.project_uas_mp.config.Sqlite;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -57,7 +58,6 @@ public class AddMatkulActivity extends AppCompatActivity {
   } // onCreate
 
   private ArrayAdapter jurusanAdapter() {
-
     if (jurusan.size()==0) return null;
 
     List<String> list_jurusan= new ArrayList<>();
@@ -79,9 +79,12 @@ public class AddMatkulActivity extends AppCompatActivity {
     call.enqueue(new Callback<JurusanApiResponse>() {
       @Override
       public void onResponse(Call<JurusanApiResponse> call, Response<JurusanApiResponse> response) {
-        if (!response.isSuccessful()) return;
-
-        jurusan= response.body().getListJurusan();
+        if (!response.isSuccessful()) {
+          Sqlite db= new Sqlite(AddMatkulActivity.this);
+          jurusan= db.getAllJurusan();
+        } else {
+          jurusan= response.body().getListJurusan();
+        }
 
         spJurusan.setAdapter(jurusanAdapter());
       }
@@ -98,6 +101,12 @@ public class AddMatkulActivity extends AppCompatActivity {
     String credits= sks[spSks.getSelectedItemPosition()];
     String major_id= jurusan.get(spJurusan.getSelectedItemPosition()).getCode();
 
+    if (name.equals("")) {
+      Toast.makeText(this, "Harap mengisi nama mata kuliahe", Toast.LENGTH_SHORT).show();
+      etAddNamaMatkul.requestFocus();
+      return;
+    }
+
     MatkulBody body= new MatkulBody(major_id, name, credits);
 
     Call<MatkulApiResponse> call= AppConfig.requestConfig(getApplicationContext()).addMatkul(body);
@@ -108,13 +117,10 @@ public class AddMatkulActivity extends AppCompatActivity {
         if (!response.isSuccessful()) {
           MatkulApiResponse errBody= new Gson().fromJson(response.errorBody().charStream(), MatkulApiResponse.class);
 
-          Toast.makeText(AddMatkulActivity.this, errBody.getErrors().get(0), Toast.LENGTH_SHORT).show();
+          Toast.makeText(AddMatkulActivity.this, errBody.getMessage(), Toast.LENGTH_SHORT).show();
 
           return;
         }
-
-        PreferenceManager.getDefaultSharedPreferences(AddMatkulActivity.this)
-                .edit().remove("matkulCache").apply();
 
         Toast.makeText(AddMatkulActivity.this, "Matkul berhasil ditambahkan", Toast.LENGTH_SHORT).show();
 

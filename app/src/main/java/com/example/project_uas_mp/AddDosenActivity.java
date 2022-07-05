@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -54,10 +55,10 @@ public class AddDosenActivity extends AppCompatActivity {
     btnFileAddDosen= findViewById(R.id.btnFileAddDosen);
     btnSendAddDosen= findViewById(R.id.btnSendAddDosen);
 
-    etAddIdDosen.setText("1111");
-    etAddNamaDosen.setText("Dosen 1");
-    etAddTelpDosen.setText("088118");
-    etAddAlamatDosen.setText("Jln");
+//    etAddIdDosen.setText("1111");
+//    etAddNamaDosen.setText("Dosen 1");
+//    etAddTelpDosen.setText("088118");
+//    etAddAlamatDosen.setText("Jln");
 
     btnFileAddDosen.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -100,6 +101,11 @@ public class AddDosenActivity extends AppCompatActivity {
             .addFormDataPart("file", sourceFile.getName(), file)
             .build();
 
+        ProgressDialog progressDialog= new ProgressDialog(this);
+        progressDialog.setMessage("Gambar sedang diupload");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         Call<FilesApiResponse> call= AppConfig.requestConfig(getApplicationContext()).uploadFile(body);
 
         call.enqueue(new Callback<FilesApiResponse>() {
@@ -107,18 +113,20 @@ public class AddDosenActivity extends AppCompatActivity {
           public void onResponse(Call<FilesApiResponse> call, Response<FilesApiResponse> response) {
             if (!response.isSuccessful()) {
               Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
+            } else {
+              filename = response.body().getData().getName();
 
-              return;
+              imvAddDosen.setImageURI(data.getData());
             }
 
-            filename = response.body().getData().getName();
-
-            imvAddDosen.setImageURI(data.getData());
+           progressDialog.dismiss();
           }
 
           @Override
           public void onFailure(Call<FilesApiResponse> call, Throwable t) {
             Log.d("uploadFile", t.getLocalizedMessage());
+
+            progressDialog.dismiss();
 
             Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
           }
@@ -181,9 +189,6 @@ public class AddDosenActivity extends AppCompatActivity {
         }
 
         Toast.makeText(AddDosenActivity.this, "Data dosen berhasil ditambahkan", Toast.LENGTH_SHORT).show();
-
-        PreferenceManager.getDefaultSharedPreferences(AddDosenActivity.this).edit()
-            .remove("cacheDosen").apply();
 
         finish();
       }

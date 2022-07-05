@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,9 @@ import com.example.project_uas_mp.class_data.AuthApiResponse;
 import com.example.project_uas_mp.class_data.AuthBody;
 import com.example.project_uas_mp.config.AppConfig;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -33,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
 
     sp= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -93,12 +97,25 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor= sp.edit();
 
-        editor.putString("token", res.getData().getAccess_token());
-        editor.putString("username", username);
+        String name= "";
+        String token= res.getData().getAccess_token();
+
+        String tokenPayloadEncoded = TextUtils.split(token, "[.]")[1];
+        byte[] tokenPayloadDecodedByte = Base64.decode(tokenPayloadEncoded, Base64.DEFAULT);
+
+        try {
+          JSONObject tokenJson = new JSONObject(new String(tokenPayloadDecodedByte));
+          name = tokenJson.getString("name");
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+
+        editor.putString("token", token);
+        editor.putString("name", name);
 
         editor.apply();
 
-        Toast.makeText(MainActivity.this, "Selamat datang "+username, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Selamat datang "+name, Toast.LENGTH_SHORT).show();
 
         Intent intent= new Intent(getApplicationContext(), DashboardActivity.class);
 

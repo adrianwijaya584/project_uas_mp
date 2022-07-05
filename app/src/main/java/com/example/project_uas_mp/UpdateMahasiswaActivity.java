@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,7 +71,7 @@ public class UpdateMahasiswaActivity extends AppCompatActivity {
     etEditAlamatMhs.setText(mahasiswaBody.getAddress());
     filename= mahasiswaBody.getProfile_image();
 
-    if (mahasiswaBody.getGender() == "male") {
+    if (mahasiswaBody.getGender().equals("male")) {
       mhsLakiLaki.setChecked(true);
     } else {
       mhsPerempuan.setChecked(true);
@@ -133,19 +134,24 @@ public class UpdateMahasiswaActivity extends AppCompatActivity {
 
         Call<FilesApiResponse> call= AppConfig.requestConfig(getApplicationContext()).uploadFile(body);
 
+        ProgressDialog progressDialog= new ProgressDialog(this);
+        progressDialog.setMessage("Gambar sedang diupload");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         call.enqueue(new Callback<FilesApiResponse>() {
           @Override
           public void onResponse(Call<FilesApiResponse> call, Response<FilesApiResponse> response) {
             if (!response.isSuccessful()) {
               filename= mahasiswaBody.getProfile_image();
               Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
+            } else {
+              filename = response.body().getData().getName();
 
-              return;
+              imvUpdateMhs.setImageURI(data.getData());
             }
 
-            filename = response.body().getData().getName();
-
-            imvUpdateMhs.setImageURI(data.getData());
+            progressDialog.dismiss();
           }
 
           @Override
@@ -155,6 +161,8 @@ public class UpdateMahasiswaActivity extends AppCompatActivity {
             filename= mahasiswaBody.getProfile_image();
 
             Toast.makeText(getApplicationContext(), "File gagal diupload", Toast.LENGTH_SHORT).show();
+
+            progressDialog.dismiss();
           }
         }); // onFail
       } // enqueue
@@ -217,9 +225,6 @@ public class UpdateMahasiswaActivity extends AppCompatActivity {
         }
 
         Toast.makeText(UpdateMahasiswaActivity.this, "Data mahasiswa berhasil diubah", Toast.LENGTH_SHORT).show();
-
-        PreferenceManager.getDefaultSharedPreferences(UpdateMahasiswaActivity.this).edit()
-            .remove("mahasiswaCache").apply();
 
         finish();
       }
