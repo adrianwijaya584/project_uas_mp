@@ -72,12 +72,6 @@ public class UpdateJurusanActivity extends AppCompatActivity {
       return;
     }
 
-    if (namaJurusan.equals("")) {
-      Toast.makeText(this, "Harap isi nama jurusan", Toast.LENGTH_SHORT).show();
-      etUpdateNamaJ.requestFocus();
-      return;
-    }
-
     Call<JurusanApiResponse> responseCall= AppConfig.requestConfig(getApplicationContext())
         .updateJurusan(id, new JurusanBody(id, namaJurusan));
 
